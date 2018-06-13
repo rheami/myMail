@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+    <!--ici-->
+
+    <record model="ir.ui.view" id="mymail_message_form">
+        <field name="name">mail_message_read_form</field>
+        <field name="model">mail.message</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <form string="Message">
+                <header>
+                    <!--<button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"-->
+                            <!--states="waiting_answer"-->
+                            <!--context="{'default_body': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',-->
+                                        <!--'default_subject': 'Reminder to fill up Survey' }"/>-->
+                </header>
+                <group>
+                    <field name="author_id" readonly="1"/>
+                    <field name="email_from" readonly="1"/>
+                    <field name="date" readonly="1"/>
+                    <field name="partner_ids"
+                           widget="many2many_tags"
+                           readonly="1"/>
+                    <field name="notified_partner_ids"
+                           widget="many2many_tags"
+                           readonly="1"/>
+                </group>
+                <h1><field name="subject" readonly="1"/></h1>
+                <field name="body" readonly="1"/>
+                <field name="attachment_ids"
+                       widget="many2many_binary"
+                       readonly="1"/>
+            </form>
+        </field>
+    </record>
+
+     <!--voir le tree de mail.mail dans setting pour les boutons-->
+    <record model="ir.ui.view" id="mymail_message_tree">
+        <field name="name">myMail.message.tree</field>
+        <field name="model">mail.message</field>
+        <field name="priority">28</field>
+        <field name="arch" type="xml">
+            <tree toolbar="True" string="Messages"  class="mymailclass">
+                <button name="set_messages_read"
+                    string="set_messages_read"
+                    confirm="Set these messages as read ?"
+                    type="object"
+                    icon="terp-check"
+                    attrs="{
+                        'invisible': [('to_read', '=', 1)],
+                    }"
+                />
+                <button name="set_messages_read"
+                    string="set_messages_read"
+                    confirm="Set these messages as read ?"
+                    type="object"
+                    icon="terp-camera_test"
+                    attrs="{
+                        'invisible': [('to_read', '!=', 1)],
+                    }"
+                />
+                <field name="to_read"/>
+                <field name="starred"/>
+
+                <field name="author_id"/>
+                <field name="subject"/>
+                <field name="short_description"/>
+                <field name="date"/>
+                <field name="partner_ids"/>
+
+                <field name="parent_id"/>
+
+                <!--<field name="child_ids"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mymail_message_search">
+        <field name="name">mymail.message.search</field>
+        <field name="model">mail.message</field>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <search string="Messages Search">
+                <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
+                <field name="subject"/>
+                <field name="type"/>
+                <field name="author_id"/>
+                <field name="partner_ids"/>
+                <field name="model"/>
+                <field name="res_id"/>
+                <field name="parent_id"/>
+                <filter string="To Read"
+                        name="message_unread" help="Show messages to read"
+                        domain="[('to_read', '=', True)]"/>
+                <separator/>
+                <filter string="Has attachments"
+                        name="attachments"
+                        domain="[('attachment_ids', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Subtype" name="thread" domain="[]" context="{'group_by':'subtype_id'}"/>
+                    <filter string="From" name="thread" domain="[]" context="{'group_by':'email_from'}"/>
+                    <filter string="Author" name="thread" domain="[]" context="{'group_by':'author_id'}"/>
+                    <!--todo-->
+                    <!--<filter string="Date" name="thread" domain="[]" context="{'group_by':'date'}"/>-->
+                    <!--todo-->
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_view_mymail_message" model="ir.actions.act_window">
+        <field name="name">read mail</field>
+        <field name="res_model">mail.message</field>
+        <!--<field name="domain">[('to_read', '=', True), ('starred', '=', False)]</field>-->
+        <field name="search_view_id" ref="mymail_message_search"/>
+        <field name="context">{
+            'default_model': 'res.users',
+            'default_res_id': uid,
+            'thread_model': 'res.partner',
+            'search_default_message_unread': 1
+        }</field>
+    </record>
+
+    <record id="action_view_mymail_message_tree" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="mymail_message_tree"/>
+        <field name="act_window_id" ref="action_view_mymail_message"/>
+    </record>
+
+    <record id="action_view_mymail_message_form" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mymail_message_form"/>
+        <field name="act_window_id" ref="action_view_mymail_message"/>
+    </record>
+
+    <record id="action_view_mail_message_tree" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="mail.view_message_tree"/>
+        <field name="act_window_id" ref="mail.action_view_mail_message"/>
+    </record>
+
+    <record id="action_view_mail_message_form" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail.view_message_form"/>
+        <field name="act_window_id" ref="mail.action_view_mail_message"/>
+    </record>
+
+    <!-- Add menu entry in Messaging -->
+    <menuitem action="action_view_mymail_message" name="MyInbox" id="menu_mymail_message" sequence='10' parent="mail.mail_feeds" />
+
+</data>
+</openerp>
+
+
+ <!--note : voir Wall Widget et  Thread Widget : affichage des emails et sous email-->

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="mymail_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/mymail/static/src/css/mymail.css"/>
+                <script type="text/javascript" src="/mymail/static/src/js/mymail.js"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>
+
+
+ <!--note : voir Wall Widget et  Thread Widget : affichage des emails et sous email-->
