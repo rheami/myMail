@@ -16,7 +16,7 @@ Emails Inbox In Tree View.
     'author': 'Michel Rheault, Osha',
     'website': "http://www.yourcompany.com",
     'license': 'AGPL-3',
-    'depends' : ['mail'],
+    'depends' : ['mail', 'mail_full_expand', 'mail_forward', 'html_text'],
     'data' : [
         'views/assets.xml',
         'views/mail_message_view.xml',

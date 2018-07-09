@@ -6,32 +6,14 @@
     <record model="ir.ui.view" id="mymail_message_form">
         <field name="name">mail_message_read_form</field>
         <field name="model">mail.message</field>
-        <field name="priority">2</field>
+        <field name="inherit_id" ref="mail_full_expand.view" />
         <field name="arch" type="xml">
-            <form string="Message">
+            <group position="before">
                 <header>
-                    <!--<button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"-->
-                            <!--states="waiting_answer"-->
-                            <!--context="{'default_body': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',-->
-                                        <!--'default_subject': 'Reminder to fill up Survey' }"/>-->
+                    <button string="Reply" name="%(mail_forward.compose_action)d" type="action"/>
+                    <button string="Forward" name="%(mail_forward.compose_action)d" type="action"/>
                 </header>
-                <group>
-                    <field name="author_id" readonly="1"/>
-                    <field name="email_from" readonly="1"/>
-                    <field name="date" readonly="1"/>
-                    <field name="partner_ids"
-                           widget="many2many_tags"
-                           readonly="1"/>
-                    <field name="notified_partner_ids"
-                           widget="many2many_tags"
-                           readonly="1"/>
-                </group>
-                <h1><field name="subject" readonly="1"/></h1>
-                <field name="body" readonly="1"/>
-                <field name="attachment_ids"
-                       widget="many2many_binary"
-                       readonly="1"/>
-            </form>
+            </group>
         </field>
     </record>
 
@@ -41,7 +23,7 @@
         <field name="model">mail.message</field>
         <field name="priority">28</field>
         <field name="arch" type="xml">
-            <tree toolbar="True" string="Messages"  class="mymailclass">
+            <tree toolbar="True" string="Messages" class="mymailclass">
                 <button name="set_messages_read"
                     string="set_messages_read"
                     confirm="Set these messages as read ?"
@@ -64,7 +46,7 @@
                 <field name="starred"/>
 
                 <field name="author_id"/>
-                <field name="subject"/>
+                <field name="subject" invisible="1"/>
                 <field name="short_description"/>
                 <field name="date"/>
                 <field name="partner_ids"/>

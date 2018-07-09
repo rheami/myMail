@@ -13,11 +13,13 @@ class MailMessage(models.Model):
     def _get_description_short(self):
         res = {}
         for message in self:
+            truncated_text = self.env["ir.fields.converter"].text_from_html(
+                message.body, 40, 100)
+
             if message.subject:
-                message.shortdescription = message.subject
+                message.short_description = message.subject + u": " + truncated_text
             else:
-                plaintext_ct = '' if not message.body else html2plaintext(message.body)
-                message.shortdescription = plaintext_ct[:100] + '%s' % (' [...]' if len(plaintext_ct) >= 100 else '')
+                message.short_description = truncated_text
 
     short_description = fields.Char(string = "description", compute=_get_description_short, help='Message description: either the subject, or the beginning of the body')
 

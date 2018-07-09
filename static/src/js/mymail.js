@@ -1,4 +1,3 @@
-console.log("I'm here!!");
 openerp.mymail = function (instance, local) {
 
     var _t = instance.web._t,
