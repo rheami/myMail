@@ -22,17 +22,39 @@
                     </button>
                 </header>
             </group>
+            <field name="notified_partner_ids" position="after">
+                <field name="to_read"/>
+                <field name="starred"/>
+            </field>
             <field name="body" position="after">
                 <notebook>
                     <page string="childs">
-                        <field name="child_ids"/>
+                        <field name="child_ids">
+                            <tree string="Details">
+                                <field name="to_read"/>
+                                <field name="starred"/>
+                                <field name="author_id"/>
+                                <field name="subject" invisible="1"/>
+                                <field name="short_description"/>
+                                <field name="date"/>
+                                <field name="partner_ids"/>
+                            </tree>
+                        </field>
                     </page>
                     <page string="parent">
-                        <field name="parent_id"/>
+                        <field name="parent_id">
+                            <tree string="Details">
+                                <field name="to_read"/>
+                                <field name="starred"/>
+
+                                <field name="author_id"/>
+                                <field name="subject" invisible="1"/>
+                                <field name="short_description"/>
+                                <field name="date"/>
+                                <field name="partner_ids"/>
+                            </tree>
+                        </field>
                     </page>
-                    <!--<page string="Attachments">-->
-                        <!--<field name="attachment_ids"/>-->
-                    <!--</page>-->
                 </notebook>
             </field>
         </field>
