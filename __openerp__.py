@@ -18,15 +18,18 @@ Emails Inbox In Tree View.
     'depends' : [
         'base',
         'mail',
+        'mail_extend',
         'mail_full_expand',
         'mail_forward',
-        'html_text'
+        'html_text',
+        # 'web_tree_image',
+        'web_list_html_widget'
     ],
     'data' : [
         'views/assets.xml',
         'views/mail_message_view.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
+    'qweb': [],
     'installable': True,
     'application': True,
 }

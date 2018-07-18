@@ -1,1 +1,8 @@
-.mymailclass [data-field="short_description"]{width: 500px;}
+.mymailclass [data-field="short_description"]{width: 70%;}
+.mymailclass [data-field="author"]{width: 10%;}
+.openerp .oe_mail_wall .oe_mail {
+    margin: 16px;
+    width: unset;
+    max-width: 100%;
+    display: inline-block;
+}
