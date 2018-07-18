@@ -7,22 +7,34 @@
         <field name="name">mail_message_read_form</field>
         <field name="model">mail.message</field>
         <field name="inherit_id" ref="mail_full_expand.view" />
-        <!--<field name="inherit_id" ref="mail_full_expand.view" />-->
         <field name="arch" type="xml">
             <group position="before">
                 <header>
-                    <span class='oe_forward'><a title="Forward" class="oe_e">*</a></span>
                     <button string="Forward" name="on_message_forward"
                         type="object"
-                        class="btn-primary">
+                        context="{'option':'forward'}"
+                        class="oe_forward">
                     </button>
-                    <button string="Reply" name="on_message_reply"
+                    <button string="Reply" name="on_message_forward"
                         type="object"
-                        class="btn-primary">
+                        context="{'option':'reply'}"
+                        class="oe_reply">
+                    </button>
+                    <button name="toogle_messages_to_read"
+                    string="toggle to_read"
+                    type="object">
+                    <!--attrs="{'invisible': [('to_read', '!=', 1)],}">-->
+                    </button>
+                    <button name="toogle_messages_starred"
+                    string="toggle starred"
+                    type="object">
+                    <!--attrs="{'invisible': [('to_read', '!=', 1)],}">-->
                     </button>
                 </header>
             </group>
             <field name="notified_partner_ids" position="after">
+                <field name="id" groups="base.group_no_one"/>
+                <field name="on_open" invisible="1"/>
                 <field name="to_read"/>
                 <field name="starred"/>
             </field>
@@ -31,6 +43,7 @@
                     <page string="childs">
                         <field name="child_ids">
                             <tree string="Details">
+                                <field name="id" groups="base.group_no_one"/>
                                 <field name="to_read"/>
                                 <field name="starred"/>
                                 <field name="author_id"/>
@@ -42,16 +55,25 @@
                         </field>
                     </page>
                     <page string="parent">
-                        <field name="parent_id">
+                        <field name="parent_id" widget="many2one_clickable">
+                            <!--todo afficher les champs suivants:-->
                             <tree string="Details">
-                                <field name="to_read"/>
                                 <field name="starred"/>
-
                                 <field name="author_id"/>
                                 <field name="subject" invisible="1"/>
                                 <field name="short_description"/>
                                 <field name="date"/>
                                 <field name="partner_ids"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="notifications">
+                        <field name="notification_ids">
+                            <tree string="Details">
+                                <field name="partner_id"/>
+                                <field name="is_read"/>
+                                <field name="starred"/>
+                                <field name="message_id"/>
                             </tree>
                         </field>
                     </page>
@@ -75,6 +97,7 @@
                     attrs="{
                         'invisible': [('to_read', '=', 1)],
                     }"
+                    groups="base.group_no_one"
                 />
                 <button name="set_messages_read"
                     string="set_messages_read"
@@ -84,18 +107,18 @@
                     attrs="{
                         'invisible': [('to_read', '!=', 1)],
                     }"
+                    groups="base.group_no_one"
                 />
+                <field name="id" groups="base.group_no_one"/>
                 <field name="to_read"/>
                 <field name="starred"/>
-
                 <field name="author_id"/>
                 <field name="subject" invisible="1"/>
                 <field name="short_description"/>
                 <field name="date"/>
                 <field name="partner_ids"/>
-
-                <field name="parent_id"/>
-
+                <field name="parent_id" invisible="1"/>
+                <!--<div t-if="parent_id.id"><field name="parent_id.id"/></div>-->
                 <!--<field name="child_ids"/>-->
             </tree>
         </field>
