@@ -19,7 +19,7 @@ Emails Inbox In Tree View.
         'base',
         'mail',
         'mail_full_expand',
-        'mail_forward',
+        'sync_mail_forward',
         'html_text'
     ],
     'data' : [

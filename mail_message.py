@@ -19,6 +19,110 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     @api.multi
+    def on_message_forward2(self):
+
+#         if (!this.do_check_attachment_upload()) {
+#         return false;
+#         }
+#         var
+#         recipient_done = $.Deferred();
+#         if (this.is_log) {
+#         recipient_done.resolve([]);
+#
+#     }
+#     else {
+#     recipient_done = this.check_recipient_partners();
+#
+# }
+# $.when(recipient_done).done(function(partner_ids)
+# {
+#     var
+# context = {
+#     'default_parent_id': self.id,
+#     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find(
+#     'textarea:not(.oe_compact)').val() | | ''): ''),
+# 'default_attachment_ids': _.map(self.attachment_ids, function(file)
+# {
+# return file.id;}),
+# 'default_partner_ids': partner_ids,
+#                        'default_is_log': self.is_log,
+#                                          'mail_post_autofollow': true,
+#                                                                  'mail_post_autofollow_partner_ids': partner_ids,
+#                                                                                                      'is_private': self.is_private,
+# };
+# if (default_composition_mode != 'reply' & & self.context.default_model & & self.context.default_res_id) {
+# context.default_model = self.context.default_model;
+# context.default_res_id = self.context.default_res_id;
+# }
+# if (self.context.option == 'forward'){
+# context['option'] = 'forward';
+# }
+
+        context = dict(self._context or {})
+        if context['option'] == 'forward':
+            subject = [_("Fwd")]
+            header = [
+                "----------" + _("Forwarded message") + "----------",
+                _("From: ") + self.email_from,
+                _("Date: ") + self.date,
+            ]
+        else:
+            if context['option'] == 'reply':
+                subject = [_("Re")]
+                header = [
+                    "----------" + _("Replyed message") + "----------",
+                    _("From: ") + self.email_from,
+                    _("Date: ") + self.date,
+                ]
+
+        if self.record_name and self.parent_id:
+            subject.append(self.record_name)
+        if self.subject:
+            subject.append(self.subject)
+        else:
+            if len(subject) < 2:
+                subject.append("(No subject)")
+
+        if self.subject:
+            header.append(_("Subject: ") + self.subject)
+
+        header = '<br/>'.join(html_escape(s) for s in header)
+
+        context = {
+            'default_parent_id': self.id,
+            'default_body':
+                "<p><i>" + header + "</i></p><br/>" +
+                self.body,
+            'default_attachment_ids': self.attachment_ids.ids,
+            'default_partner_ids': self.partner_ids.ids,
+            'mail_post_autofollow': True,
+            'mail_post_autofollow_partner_ids': self.partner_ids.ids,
+        }
+
+        # private message: no model, no res_id
+        is_private = False
+        if not self.model or not self.res_id:
+            is_private = True
+
+        context["is_private"] = is_private
+
+        if self.model:
+            context["default_model"] = self.model
+        if self.res_id:
+            context["default_res_id"] = self.res_id
+
+        action = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'mail.compose.message',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'context': context
+        }
+        return action
+
+    @api.multi
     def on_message_forward(self):
         res = self.env['ir.actions.act_window'].for_xml_id('mail_forward', 'compose_action')
         # Generate email subject as possible from record_name and subject
