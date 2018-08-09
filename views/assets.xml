@@ -4,7 +4,12 @@
         <template id="assets_backend" name="mymail_assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/mymail/static/src/css/mymail.css"/>
-                <script type="text/javascript" src="/mymail/static/src/js/mymail.js"/>
+            </xpath>
+        </template>
+        <template id="mail_wall_layout_" inherit_id="web.layout" name="mymail layout">
+            <xpath expr="html/head" position="inside">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+                <link rel="stylesheet" href="/mymail/static/src/css/mymail.css"/>
             </xpath>
         </template>
         <template id="mail_wall_layout_" inherit_id="web.layout" name="mymail layout">
@@ -15,6 +20,3 @@
         </template>
     </data>
 </openerp>
-
-
- <!--note : voir Wall Widget et  Thread Widget : affichage des emails et sous email-->

@@ -1,69 +1,137 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <!--ici-->
 
-    <record model="ir.ui.view" id="mymail_message_form">
-        <field name="name">mail_message_read_form</field>
-        <field name="model">mail.message</field>
-        <field name="inherit_id" ref="mail_full_expand.view" />
-        <field name="arch" type="xml">
-            <group position="before">
-                <header>
-                    <button string="Forward" name="on_message_forward"
+<record model="ir.ui.view" id="mymail_message_tree">
+    <field name="name">myMail.message.tree</field>
+    <field name="model">mail.message</field>
+    <field name="priority">28</field>
+    <field name="arch" type="xml">
+        <tree toolbar="True" string="Messages" create="false" edit="false" class="mymailclass">
+            <field name="author_avatar" widget="image" height="36px" invisible="1"/>
+            <field name="author" widget="html"/>
+            <field name="subject" invisible="1"/>
+            <field name="short_description" widget="html"/>
+            <field name="date"/>
+            <!--<field name="partner_ids" groups="base.group_no_one"/>-->
+            <field name="parent_id" invisible="1"/>
+        </tree>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="mymail_message_form">
+    <field name="name">mail_message_read_form</field>
+    <field name="model">mail.message</field>
+    <field name="arch" type="xml">
+        <form string="Message">
+            <!--<sheet>-->
+                <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                    <button name="on_message_forward"
                         type="object"
                         context="{'option':'forward'}"
-                        class="oe_forward">
+                        class="oe_stat_button"
+                        help="Forward"
+                        icon="fa-share">
                     </button>
-                    <button string="Reply" name="on_message_forward"
+                    <button name="on_message_forward"
                         type="object"
                         context="{'option':'reply'}"
-                        class="oe_reply">
+                        class="oe_stat_button"
+                        help="Reply"
+                        icon="fa-reply">
                     </button>
-                    <button name="toogle_messages_to_read"
-                    string="toggle to_read"
-                    type="object">
-                    <!--attrs="{'invisible': [('to_read', '!=', 1)],}">-->
+                    <button name="toggle_messages_to_read"
+                        type="object"
+                        class="oe_stat_button"
+                        help="Move to Inbox"
+                        icon="fa-inbox"
+                        attrs="{'invisible': [('to_read', '=', True)]}">
                     </button>
-                    <button name="toogle_messages_starred"
-                    string="toggle starred"
-                    type="object">
-                    <!--attrs="{'invisible': [('to_read', '!=', 1)],}">-->
+                    <button name="toggle_messages_to_read"
+                        type="object"
+                        class="oe_stat_button"
+                        help="Set as Read"
+                        icon="fa-check"
+                        attrs="{'invisible': [('to_read', '=', False)]}">
                     </button>
-                </header>
-            </group>
-            <field name="notified_partner_ids" position="after">
-                <field name="id" groups="base.group_no_one"/>
-                <field name="on_open" invisible="1"/>
-                <field name="to_read"/>
-                <field name="starred"/>
-            </field>
-            <field name="body" position="after">
+                    <button name="toggle_messages_starred"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-star"
+                        help="Done"
+                        attrs="{'invisible': [('starred', '!=', True)]}">
+                    </button>
+                    <button name="toggle_messages_starred"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-star-o"
+                        help="Mark as Todo"
+                        attrs="{'invisible': [('starred', '=', True)]}">
+                    </button>
+                    <!--<button name="mail_relocation"-->
+                        <!--type="object"-->
+                        <!--class="oe_stat_button"-->
+                        <!--icon="fa-random"-->
+                        <!--help="Move to thread">-->
+                    <!--</button>-->
+                </div>
+                <field name="starred" invisible="1"/>
+                <field name="to_read" invisible="1"/>
+
+                <div class="oe_left" style="width: 500px;">
+                    <div class="oe_title" style="width: 390px;">
+                        <label class="oe_edit_only" for="about" string="About"/>
+                        <h1><field name="about" class="oe_inline"/></h1>
+                    </div>
+                    <div class="oe_left" groups="base.group_user">
+                        <field name="author_avatar" class="oe_avatar" widget="image" />
+                        <field name="author_id" />
+                    </div>
+                    <div class="oe_right" groups="base.group_user">
+                        <div>
+                            <field name="date"/>
+                        </div>
+                    </div>
+                </div>
+
+                <field name="mybody"/>
+
+                <label for="parent_id" string="Initial Thread Message: "/><field name="parent_id" class="oe_inline"/>
+                <group>
+                    <group>
+                        <!--<field name="id" groups="base.group_no_one"/>-->
+                        <field name="type"/>
+                        <field name="subtype_id" options="{'no_open': True}"/>
+                    </group>
+                    <group>
+                        <field name="partner_ids" widget="many2many_tags" />
+                        <field name="notified_partner_ids" widget="many2many_tags" />
+                        <field name="attachment_ids" widget="many2many_tags" />
+                    </group>
+                </group>
                 <notebook>
-                    <page string="childs">
+                    <page string="childs" attrs="{'invisible': [('child_ids', '=', [])]}">
                         <field name="child_ids">
-                            <tree string="Details">
-                                <field name="id" groups="base.group_no_one"/>
-                                <field name="to_read"/>
-                                <field name="starred"/>
-                                <field name="author_id"/>
+                            <tree toolbar="True" string="Messages" create="false" edit="false" class="mymailclass">
+                                <field name="author_avatar" widget="image" height="36px" invisible="1"/>
+                                <field name="author" widget="html"/>
                                 <field name="subject" invisible="1"/>
-                                <field name="short_description"/>
+                                <field name="short_description" widget="html"/>
                                 <field name="date"/>
-                                <field name="partner_ids"/>
+                                <!--<field name="partner_ids" groups="base.group_no_one"/>-->
+                                <field name="parent_id" invisible="1"/>
                             </tree>
                         </field>
                     </page>
-                    <page string="parent">
-                        <field name="parent_id" widget="many2one_clickable">
-                            <!--todo afficher les champs suivants:-->
+                    <page string="notifications">
+                        <field name="notification_ids">
                             <tree string="Details">
+                                <field name="partner_id"/>
+                                <field name="is_read"/>
                                 <field name="starred"/>
-                                <field name="author_id"/>
-                                <field name="subject" invisible="1"/>
-                                <field name="short_description"/>
-                                <field name="date"/>
-                                <field name="partner_ids"/>
+                                <field name="message_id"/>
+                                <!--<field name="write_date"/>-->
+                                <!--todo afficher date de modification-->
                             </tree>
                         </field>
                     </page>
@@ -78,196 +146,181 @@
                         </field>
                     </page>
                 </notebook>
-            </field>
-        </field>
-    </record>
+            <!--</sheet>-->
+        </form>
+    </field>
+</record>
 
-     <!--voir le tree de mail.mail dans setting pour les boutons-->
-    <record model="ir.ui.view" id="mymail_message_tree">
-        <field name="name">myMail.message.tree</field>
-        <field name="model">mail.message</field>
-        <field name="priority">28</field>
-        <field name="arch" type="xml">
-            <tree toolbar="True" string="Messages" class="mymailclass">
-                <button name="set_messages_read"
-                    string="set_messages_read"
-                    confirm="Set these messages as read ?"
-                    type="object"
-                    icon="terp-check"
-                    attrs="{
-                        'invisible': [('to_read', '=', 1)],
-                    }"
-                    groups="base.group_no_one"
-                />
-                <button name="set_messages_read"
-                    string="set_messages_read"
-                    confirm="Set these messages as read ?"
-                    type="object"
-                    icon="terp-camera_test"
-                    attrs="{
-                        'invisible': [('to_read', '!=', 1)],
-                    }"
-                    groups="base.group_no_one"
-                />
-                <field name="id" groups="base.group_no_one"/>
-                <field name="to_read"/>
-                <field name="starred"/>
-                <field name="author_id"/>
-                <field name="subject" invisible="1"/>
-                <field name="short_description"/>
-                <field name="date"/>
-                <field name="partner_ids"/>
-                <field name="parent_id" invisible="1"/>
-                <!--<div t-if="parent_id.id"><field name="parent_id.id"/></div>-->
-                <!--<field name="child_ids"/>-->
-            </tree>
-        </field>
-    </record>
+<record model="ir.ui.view" id="mymail_message_search">
+    <field name="name">mymail.message.search</field>
+    <field name="model">mail.message</field>
+    <field name="priority">25</field>
+    <field name="arch" type="xml">
+        <search string="Messages Search">
+            <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
+            <field name="subject"/>
+            <field name="type"/>
+            <field name="author_id"/>
+            <field name="partner_ids"/>
+            <field name="model"/>
+            <field name="res_id"/>
+            <field name="parent_id"/>
+            <filter string="To Read"
+                    name="message_unread" help="Show messages to read"
+                    domain="[('to_read', '=', True)]"/>
+            <separator/>
+            <filter string="Has attachments"
+                    name="attachments"
+                    domain="[('attachment_ids', '!=', False)]"/>
+            <group expand="0" string="Group By">
+                <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
+                <filter string="Subtype" name="thread" domain="[]" context="{'group_by':'subtype_id'}"/>
+                <filter string="From" name="thread" domain="[]" context="{'group_by':'email_from'}"/>
+                <filter string="Author" name="thread" domain="[]" context="{'group_by':'author_id'}"/>
+                <!--todo-->
+                <!--<filter string="Date" name="thread" domain="[]" context="{'group_by':'date'}"/>-->
+                <!--todo-->
+            </group>
+        </search>
+    </field>
+</record>
 
-    <record model="ir.ui.view" id="mymail_message_search">
-        <field name="name">mymail.message.search</field>
-        <field name="model">mail.message</field>
-        <field name="priority">25</field>
-        <field name="arch" type="xml">
-            <search string="Messages Search">
-                <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
-                <field name="subject"/>
-                <field name="type"/>
-                <field name="author_id"/>
-                <field name="partner_ids"/>
-                <field name="model"/>
-                <field name="res_id"/>
-                <field name="parent_id"/>
-                <filter string="To Read"
-                        name="message_unread" help="Show messages to read"
-                        domain="[('to_read', '=', True)]"/>
-                <separator/>
-                <filter string="Has attachments"
-                        name="attachments"
-                        domain="[('attachment_ids', '!=', False)]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
-                    <filter string="Subtype" name="thread" domain="[]" context="{'group_by':'subtype_id'}"/>
-                    <filter string="From" name="thread" domain="[]" context="{'group_by':'email_from'}"/>
-                    <filter string="Author" name="thread" domain="[]" context="{'group_by':'author_id'}"/>
-                    <!--todo-->
-                    <!--<filter string="Date" name="thread" domain="[]" context="{'group_by':'date'}"/>-->
-                    <!--todo-->
-                </group>
-            </search>
-        </field>
-    </record>
+<!-- To-Do views -->
+<record id="action_view_myToDo_message" model="ir.actions.act_window">
+    <field name="name">read mail</field>
+    <field name="res_model">mail.message</field>
+    <field name="domain">[('starred', '=', True)]</field>
+    <field name="search_view_id" ref="mymail_message_search"/>
+</record>
 
-    <!-- To-Do views -->
-    <record id="action_view_myToDo_message" model="ir.actions.act_window">
-        <field name="name">read mail</field>
-        <field name="res_model">mail.message</field>
-        <field name="domain">[('starred', '=', True)]</field>
-        <field name="search_view_id" ref="mymail_message_search"/>
-    </record>
+<record id="action_view_myToDo_message_tree" model="ir.actions.act_window.view">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="mymail_message_tree"/>
+    <field name="act_window_id" ref="action_view_myToDo_message"/>
+</record>
 
-    <record id="action_view_myToDo_message_tree" model="ir.actions.act_window.view">
-        <field eval="1" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="mymail_message_tree"/>
-        <field name="act_window_id" ref="action_view_myToDo_message"/>
-    </record>
+<record id="action_view_myToDo_message_form" model="ir.actions.act_window.view">
+    <field eval="2" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="mymail_message_form"/>
+    <field name="act_window_id" ref="action_view_myToDo_message"/>
+</record>
 
-    <record id="action_view_myToDo_message_form" model="ir.actions.act_window.view">
-        <field eval="2" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mymail_message_form"/>
-        <field name="act_window_id" ref="action_view_myToDo_message"/>
-    </record>
+<!-- To: Me views -->
+<record id="action_view_myNotification_message" model="ir.actions.act_window">
+    <field name="name">read mail</field>
+    <field name="res_model">mail.message</field>
+    <field name="domain">[('partner_ids.user_ids', 'in', [uid])]</field>
+    <field name="search_view_id" ref="mymail_message_search"/>
+</record>
 
-    <!-- To: Me views -->
-    <record id="action_view_myNotification_message" model="ir.actions.act_window">
-        <field name="name">read mail</field>
-        <field name="res_model">mail.message</field>
-        <field name="domain">[('partner_ids.user_ids', 'in', [uid])]</field>
-        <field name="search_view_id" ref="mymail_message_search"/>
-    </record>
+<record id="action_view_myNotification_message_tree" model="ir.actions.act_window.view">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="mymail_message_tree"/>
+    <field name="act_window_id" ref="action_view_myNotification_message"/>
+</record>
 
-    <record id="action_view_myNotification_message_tree" model="ir.actions.act_window.view">
-        <field eval="1" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="mymail_message_tree"/>
-        <field name="act_window_id" ref="action_view_myNotification_message"/>
-    </record>
+<record id="action_view_myNotification_message_form" model="ir.actions.act_window.view">
+    <field eval="2" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="mymail_message_form"/>
+    <field name="act_window_id" ref="action_view_myNotification_message"/>
+</record>
 
-    <record id="action_view_myNotification_message_form" model="ir.actions.act_window.view">
-        <field eval="2" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mymail_message_form"/>
-        <field name="act_window_id" ref="action_view_myNotification_message"/>
-    </record>
+<!-- inbox views -->
+<record id="action_view_mymail_message" model="ir.actions.act_window">
+    <field name="name">read mail</field>
+    <field name="res_model">mail.message</field>
+    <field name="domain">[('notification_ids.partner_id.user_ids', 'in', [uid])]</field>
+    <field name="search_view_id" ref="mymail_message_search"/>
+</record>
 
-    <!-- inbox views -->
-    <record id="action_view_mymail_message" model="ir.actions.act_window">
-        <field name="name">read mail</field>
-        <field name="res_model">mail.message</field>
-        <field name="domain">[('notification_ids.partner_id.user_ids', 'in', [uid])]</field>
-        <field name="search_view_id" ref="mymail_message_search"/>
-    </record>
+<record id="action_view_mymail_message_tree" model="ir.actions.act_window.view">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="mymail_message_tree"/>
+    <field name="act_window_id" ref="action_view_mymail_message"/>
+</record>
 
-    <record id="action_view_mymail_message_tree" model="ir.actions.act_window.view">
-        <field eval="1" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="mymail_message_tree"/>
-        <field name="act_window_id" ref="action_view_mymail_message"/>
-    </record>
+<record id="action_view_mymail_message_form" model="ir.actions.act_window.view">
+    <field eval="2" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="mymail_message_form"/>
+    <field name="act_window_id" ref="action_view_mymail_message"/>
+</record>
 
-    <record id="action_view_mymail_message_form" model="ir.actions.act_window.view">
-        <field eval="2" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mymail_message_form"/>
-        <field name="act_window_id" ref="action_view_mymail_message"/>
-    </record>
+<!-- sent views -->
+<record id="action_view_mySent_message" model="ir.actions.act_window">
+    <field name="name">read sent mail</field>
+    <field name="res_model">mail.message</field>
+    <field name="domain">[('author_id.user_ids', 'in', [uid])]</field>
+    <field name="search_view_id" ref="mymail_message_search"/>
+</record>
 
-    <!-- sent views -->
-    <record id="action_view_mySent_message" model="ir.actions.act_window">
-        <field name="name">read mail</field>
-        <field name="res_model">mail.message</field>
-        <field name="domain">[('author_id.user_ids', 'in', [uid])]</field>
-        <field name="search_view_id" ref="mymail_message_search"/>
-    </record>
+<record id="action_view_mySent_message_tree" model="ir.actions.act_window.view">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="mymail_message_tree"/>
+    <field name="act_window_id" ref="action_view_mySent_message"/>
+</record>
 
-    <record id="action_view_mySent_message_tree" model="ir.actions.act_window.view">
-        <field eval="1" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="mymail_message_tree"/>
-        <field name="act_window_id" ref="action_view_mySent_message"/>
-    </record>
+<record id="action_view_mySent_message_form" model="ir.actions.act_window.view">
+    <field eval="2" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="mymail_message_form"/>
+    <field name="act_window_id" ref="action_view_mySent_message"/>
+</record>
 
-    <record id="action_view_mySent_message_form" model="ir.actions.act_window.view">
-        <field eval="2" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mymail_message_form"/>
-        <field name="act_window_id" ref="action_view_mySent_message"/>
-    </record>
+<!-- archive views -->
+<record id="action_view_myArchive_message" model="ir.actions.act_window">
+    <field name="name">read archive mail</field>
+    <field name="res_model">mail.message</field>
+    <field name="domain">
+        ['|',
+            ('notification_ids.partner_id.user_ids', 'in', [uid]),
+            ('author_id.user_ids', 'in', [uid])
+        ]
+    </field>
+    <field name="search_view_id" ref="mymail_message_search"/>
+</record>
 
-    <!--preserve original views -->
-    <record id="action_view_mail_message_tree" model="ir.actions.act_window.view">
-        <field eval="1" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="mail.view_message_tree"/>
-        <field name="act_window_id" ref="mail.action_view_mail_message"/>
-    </record>
+<record id="action_view_myArchive_message_tree" model="ir.actions.act_window.view">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="mymail_message_tree"/>
+    <field name="act_window_id" ref="action_view_myArchive_message"/>
+</record>
 
-    <record id="action_view_mail_message_form" model="ir.actions.act_window.view">
-        <field eval="2" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mail.view_message_form"/>
-        <field name="act_window_id" ref="mail.action_view_mail_message"/>
-    </record>
+<!--<record id="action_view_myArchive_message_form" model="ir.actions.act_window.view">-->
+    <!--<field eval="2" name="sequence"/>-->
+    <!--<field name="view_mode">form</field>-->
+    <!--<field name="view_id" ref="mymail_message_form"/>-->
+    <!--<field name="act_window_id" ref="action_view_myArchive_message"/>-->
+<!--</record>-->
 
-    <!-- Add menu entry in Messaging -->
-    <menuitem action="action_view_mymail_message" name="Inbox List" id="menu_inbox_list" sequence='10' parent="mail.mail_feeds" />
-    <menuitem action="action_view_myNotification_message" name="To: me List" id="menu_to_me_list" sequence='11' parent="mail.mail_feeds" />
-    <menuitem action="action_view_myToDo_message" name="To-do List" id="menu_to_do_list" sequence='12' parent="mail.mail_feeds" />
-    <menuitem action="action_view_mySent_message" name="Sent List" id="menu_sent_list" sequence='13' parent="mail.mail_feeds" />
+<!--preserve original views -->
+<record id="action_view_mail_message_tree" model="ir.actions.act_window.view">
+    <field eval="1" name="sequence"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="mail.view_message_tree"/>
+    <field name="act_window_id" ref="mail.action_view_mail_message"/>
+</record>
+
+<record id="action_view_mail_message_form" model="ir.actions.act_window.view">
+    <field eval="2" name="sequence"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="mail.view_message_form"/>
+    <field name="act_window_id" ref="mail.action_view_mail_message"/>
+</record>
+
+<!-- Add menu entry in Messaging -->
+<menuitem action="action_view_mymail_message" name="Inbox List" id="menu_inbox_list" sequence='10' parent="mail.mail_feeds" />
+<menuitem action="action_view_myNotification_message" name="To: me List" id="menu_to_me_list" sequence='11' parent="mail.mail_feeds" />
+<menuitem action="action_view_myToDo_message" name="To-do List" id="menu_to_do_list" sequence='14' parent="mail.mail_feeds" />
+<menuitem action="action_view_mySent_message" name="Sent List" id="menu_sent_list" sequence='20' parent="mail.mail_feeds" />
+<menuitem action="action_view_myArchive_message" name="Archive List" id="menu_archive_list" sequence='16' parent="mail.mail_feeds" />
 
 </data>
 </openerp>
-
- <!--note : voir Wall Widget et  Thread Widget : affichage des emails et sous email-->
