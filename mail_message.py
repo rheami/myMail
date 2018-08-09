@@ -18,6 +18,42 @@ def html_escape(text):
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
+#         if (!this.do_check_attachment_upload()) {
+#         return false;
+#         }
+#         var
+#         recipient_done = $.Deferred();
+#         if (this.is_log) {
+#         recipient_done.resolve([]);
+#
+#     }
+#     else {
+#     recipient_done = this.check_recipient_partners();
+#
+# }
+# $.when(recipient_done).done(function(partner_ids)
+# {
+#     var
+# context = {
+#     'default_parent_id': self.id,
+#     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find(
+#     'textarea:not(.oe_compact)').val() | | ''): ''),
+# 'default_attachment_ids': _.map(self.attachment_ids, function(file)
+# {
+# return file.id;}),
+# 'default_partner_ids': partner_ids,
+#                        'default_is_log': self.is_log,
+#                                          'mail_post_autofollow': true,
+#                                                                  'mail_post_autofollow_partner_ids': partner_ids,
+#                                                                                                      'is_private': self.is_private,
+# };
+# if (default_composition_mode != 'reply' & & self.context.default_model & & self.context.default_res_id) {
+# context.default_model = self.context.default_model;
+# context.default_res_id = self.context.default_res_id;
+# }
+# if (self.context.option == 'forward'){
+# context['option'] = 'forward';
+# }
     @api.multi
     def on_message_forward(self):
         context = dict(self._context or {})
