@@ -130,18 +130,6 @@
                                 <field name="is_read"/>
                                 <field name="starred"/>
                                 <field name="message_id"/>
-                                <!--<field name="write_date"/>-->
-                                <!--todo afficher date de modification-->
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="notifications">
-                        <field name="notification_ids">
-                            <tree string="Details">
-                                <field name="partner_id"/>
-                                <field name="is_read"/>
-                                <field name="starred"/>
-                                <field name="message_id"/>
                             </tree>
                         </field>
                     </page>
