@@ -175,11 +175,13 @@ class MailMessage(models.Model):
     def _get_author(self):
         for message in self:
             author = message.author_id and message.author_id.name_get()[0][1]
-            url = '#model=res.partner&amp;id={}'.format(message.author_id.id) if author else None
-            image_src = '/web/binary/image?model=mail.message&amp;field=author_avatar&amp;id={}'.format(
+            url = None
+            if author:
+                url = '#id=%s&model=res.partner&view_type=form' % message.author_id.id
+            image_src = '/web/binary/image?model=mail.message&amp;field=author_avatar&amp;id=%s' % (
                 message.id)
             if author:
-                message.author = '<a title={} href="{}"><img height="36px" src="{}"></a>'.format(author, url, image_src)
+                message.author = '<a title=%s href="%s"><img height="36px" src="%s"></a>' % (author, url, image_src)
             else:
                 message.author = message.email_from
 
