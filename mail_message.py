@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tools import html2plaintext
 from openerp import models, fields, api, _
 
 html_escape_table = {
@@ -18,42 +17,6 @@ def html_escape(text):
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-#         if (!this.do_check_attachment_upload()) {
-#         return false;
-#         }
-#         var
-#         recipient_done = $.Deferred();
-#         if (this.is_log) {
-#         recipient_done.resolve([]);
-#
-#     }
-#     else {
-#     recipient_done = this.check_recipient_partners();
-#
-# }
-# $.when(recipient_done).done(function(partner_ids)
-# {
-#     var
-# context = {
-#     'default_parent_id': self.id,
-#     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find(
-#     'textarea:not(.oe_compact)').val() | | ''): ''),
-# 'default_attachment_ids': _.map(self.attachment_ids, function(file)
-# {
-# return file.id;}),
-# 'default_partner_ids': partner_ids,
-#                        'default_is_log': self.is_log,
-#                                          'mail_post_autofollow': true,
-#                                                                  'mail_post_autofollow_partner_ids': partner_ids,
-#                                                                                                      'is_private': self.is_private,
-# };
-# if (default_composition_mode != 'reply' & & self.context.default_model & & self.context.default_res_id) {
-# context.default_model = self.context.default_model;
-# context.default_res_id = self.context.default_res_id;
-# }
-# if (self.context.option == 'forward'){
-# context['option'] = 'forward';
-# }
     @api.multi
     def on_message_forward(self):
         context = dict(self._context or {})
@@ -191,9 +154,9 @@ class MailMessage(models.Model):
         for message in self:
             message.about = message.subject or message.record_name or 'UNDEFINED'
 
-    short_description = fields.Char(string = "description", compute=_get_description_short, help='Message description: either the subject, or the beginning of the body', store=False)
-    author = fields.Char(string="author", compute=_get_author, store=False)
-    about = fields.Char(string="about", compute=_get_about, store=False)
+    short_description = fields.Char(string = "Description", compute=_get_description_short, help='Message description: either the subject, or the beginning of the body', store=False)
+    author = fields.Char(string="Author", compute=_get_author, store=False)
+    about = fields.Char(string="About", compute=_get_about, store=False)
     # url = fields.Char(string="url", compute=_get_model_url, store=False)
     mybody = fields.Html(string="Contents", help='Automatically sanitized HTML contents',
                          compute=_get_body, store=False)

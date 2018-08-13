@@ -10,10 +10,10 @@
 Emails Tree View
 ================
 
-Emails Inbox In Tree View.
+Emails in Tree View, so we can group by author.
+
         """,
     'author': 'Michel Rheault, Osha',
-    'website': "http://www.yourcompany.com",
     'license': 'AGPL-3',
     'depends' : [
         'base',
@@ -22,7 +22,6 @@ Emails Inbox In Tree View.
         'mail_full_expand',
         'mail_forward',
         'html_text',
-        # 'web_tree_image',
         'web_list_html_widget'
     ],
     'data' : [
